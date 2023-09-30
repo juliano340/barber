@@ -1,0 +1,35 @@
+<%- include('./components/header') %>
+
+    <section id="content" class="content w-100 " style="margin-top: 0px; margin-bottom:0px;">
+        
+        <main id="login" class="form-signin text-center">
+            <form action="/register" method="POST">
+              
+              <h1 class="pb-3">Cadastro</h1>
+          
+              <div class="form-floating pb-2">
+                <input type="email" class="form-control" id="floatingInput" placeholder="nome@example.com" required>
+                <label for="floatingInput">E-mail</label>
+              </div>
+              <div class="form-floating">
+                <input type="password" class="form-control mb-2" id="floatingPassword" placeholder="Password" required>
+                <label for="floatingPassword">Senha</label>
+              </div>
+
+              <div class="form-floating">
+                <input type="password" class="form-control mb-2" id="floatingPassword" placeholder="Password" required>
+                <label for="floatingPassword">Repita a senha</label>
+              </div>
+              <button class="w-100 btn btn-lg btn-primary mb-4" type="submit">Cadastrar</button>
+          
+              <div class="checkbox ">
+                <p>Já possui uma conta? <a href="">Faça login!</a> </p>
+              </div>
+              
+              
+            </form>
+          </main>
+
+    </section>
+
+    <%- include('./components/footer') %>

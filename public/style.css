@@ -1,0 +1,80 @@
+* {
+  margin: 0px;
+  padding: 0px;
+}
+
+li {
+  list-style-type: none;
+}
+
+header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 100px;
+  background-color: #999999;
+
+}
+
+body{
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  
+}
+
+.letra {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.logo {
+  text-decoration: none;
+  
+  font-size: 18px;
+}
+
+.content{
+  flex: 1;
+  
+}
+
+.menu {
+  text-decoration: none;
+  color: #090909;
+  font-weight: 700;
+}
+
+#content {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+#login {
+    width: 30%;
+    
+  }
+
+@media (max-width: 768px) {
+  header {
+    
+    padding: 10px 10px;
+    /* Mostra o botão em telas com largura de 768 pixels ou mais (dispositivos desktop) */
+  }
+
+  .content{
+    padding-left: 30px;
+    padding-right: 30px;
+  }
+
+  #login {
+    width: 100%;
+    
+  }
+
+ 
+}
+
