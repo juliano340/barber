@@ -37,7 +37,11 @@
             <div class="offcanvas-body">
               <ul>
                 <li><a class="menu" href="/">HOME</a></li>
-                <li><a class="menu" href="/login">LOGIN</a></li>
+                <% if (!username) { %>
+                  <li><a class="menu" href="/login">LOGIN</a></li>
+                <% } else { %>
+                  <li><a class="menu" href="/logout">LOGOUT</a></li>
+                <% } %>
                 
               </ul>
             </div>

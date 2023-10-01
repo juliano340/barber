@@ -5,8 +5,18 @@ const port = 3000;
 const db = require('./db'); // Importa a conexão com o banco de dados
 
 const bcrypt = require('bcrypt');
+const session = require('express-session');
 
 app.use(express.urlencoded({ extended: true }));
+
+var userAuthenticated = false;
+
+// Configurar a sessão
+app.use(session({
+    secret: 'sua-chave-secreta',
+    resave: false,
+    saveUninitialized: true
+}));
 
 
 
@@ -14,14 +24,20 @@ app.set('view engine', 'ejs');
 app.use(express.static('public'));
 
 app.get('/', (req, res) => {
-    res.render('index', {
-        pageTitle: 'Página Inicial'
-    });
+    username = req.session.username
+
+    if (username) {
+        res.render('index', { username });
+
+    }
+    else {
+        res.send('Faça login! <a href="/login">login</a>')
+    }
 });
 
 app.get('/login', (req, res) => {
     res.render('login', {
-        pageTitle: 'Página Login'
+        username: null
     });
 });
 
@@ -34,10 +50,6 @@ app.get('/cadastro', (req, res) => {
 
 
 
-app.get('/alert', (req, res) => {
-    const mensagem = 'Esta é uma mensagem de alerta.';
-    res.render('alert', { mensagem });
-});
 
 //cadastro
 
@@ -70,13 +82,14 @@ app.post('/cadastro', async (req, res) => {
                 // Gere um hash da senha usando bcrypt
                 const hashedPassword = await bcrypt.hash(password, 10); // Use um número de rounds apropriado (10 é um valor comum)
                 console.log(hashedPassword)
-        
+
                 // Insira o usuário no banco de dados com a senha hash
-        
+
                 const query = 'INSERT INTO usuarios (nome, email, senha) VALUES (?, ?, ?)';
                 db.query(query, [nome, email, hashedPassword]);
-                res.send('Usuário cadastrado com sucesso!');
-        
+                // res.send('Usuário cadastrado com sucesso!');
+                res.redirect('/cadastro?msg=sucesso')
+
             } catch (error) {
                 console.error('Erro no cadastro do usuário:', error);
                 res.status(500).send('Erro no cadastro do usuário.');
@@ -86,12 +99,65 @@ app.post('/cadastro', async (req, res) => {
 
     });
 
-    
+
 });
 
+// Rota para processar o formulário de login
+app.post('/login', async (req, res) => {
+    const username = req.body.username;
+    const password = req.body.password;
 
+
+
+    const query = 'SELECT senha FROM usuarios WHERE email = ?';
+
+    db.query(query, [username], async (err, results) => {
+        if (err) {
+            console.error('Erro na consulta ao banco de dados: ' + err.message);
+            res.send('Erro na autenticação.');
+        } else {
+            if (results.length > 0) {
+                const hashedPassword = results[0].senha;
+
+                try {
+                    // Comparar a senha fornecida com o hash no banco de dados
+                    const match = await bcrypt.compare(password, hashedPassword);
+
+                    if (match) {
+                        // Senha válida, autenticação bem-sucedida
+                        req.session.authenticated = true;
+                        req.session.username = username;
+                        console.log(username)
+                        res.render('index', { username });
+                    } else {
+                        // Senha inválida
+                        res.redirect('/login?msg=invalid');
+                    }
+                } catch (error) {
+                    console.error('Erro ao comparar hashes: ' + error.message);
+                    res.send('Erro na autenticação.');
+                }
+            } else {
+                // Usuário não encontrado
+                res.redirect('/login?msg=invalid');
+            }
+        }
+    });
+});
+
+// Rota para logout
+app.get('/logout', (req, res) => {
+    // Destruir a sessão para efetuar o logout
+    req.session.destroy((err) => {
+        if (err) {
+            console.error('Erro ao fazer logout: ' + err.message);
+        }
+        res.redirect('/'); // Redirecionar para a página inicial ou outra página após o logout
+    });
+});
 
 //TESTE
+
 
 app.get('/users', (req, res) => {
     // Exemplo de consulta SQL

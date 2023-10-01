@@ -54,30 +54,45 @@
           // As senhas não coincidem, impedir o envio do formulário
           event.preventDefault();
           msgErro = document.getElementById('erro');
-
+          msgErro.innerText = 'As senhas não coincidem. Por favor, verifique!';
           msgErro.classList.remove("d-none");
-          msgErro.classList.add("d-block");
-
+      msgErro.classList.add("d-block");
+          
         }
       });
     </script>
 
-    <script>
-      // Função para obter parâmetros da URL
-      function obterParametroDaURL(nome) {
-        const urlSearchParams = new URLSearchParams(window.location.search);
-        return urlSearchParams.get(nome);
-      }
+<script>
+  // Função para obter parâmetros da URL
+  function obterParametroDaURL(nome) {
+      const urlSearchParams = new URLSearchParams(window.location.search);
+      return urlSearchParams.get(nome);
+  }
 
-      // Verificar se o parâmetro "erro" está presente na URL
-      const erro = obterParametroDaURL('erro');
-      if (erro === 'jacadastrado') {
+  // Verificar se o parâmetro "erro" está presente na URL
+  const erro = obterParametroDaURL('erro');
+  if (erro === 'jacadastrado') {
+      
+      msgErro = document.getElementById('erro');
+      msgErro.innerText = 'E-mail ja cadastrado!';
+      msgErro.classList.remove("d-none");
+      msgErro.classList.add("d-block");
+  }
 
-        msgErro = document.getElementById('erro');
-        msgErro.classList.remove("d-none");
-        msgErro.classList.add("d-block");
-      }
-    </script>
+  //Verificar se houve sucesso!
+  const msg = obterParametroDaURL('msg');
+  if (msg === 'sucesso') {
+      
+      msgErro = document.getElementById('erro');
+      msgErro.innerText = 'Usuário cadastrado com sucesso!';
+      msgErro.classList.remove("d-none");
+      msgErro.classList.remove("alert-danger");
+      msgErro.classList.add("alert-success");
+      msgErro.classList.add("d-block");
+  }
+
+
+</script>
 
   </section>
 

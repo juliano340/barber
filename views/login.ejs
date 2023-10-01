@@ -3,22 +3,25 @@
     <section id="content" class="content w-100 " style="margin-top: 0px; margin-bottom:0px;">
         
         <main id="login" class="form-signin text-center">
-            <form action="/register" method="POST">
+            <form action="/login" method="POST">
               
               <h1 class="pb-3">Login</h1>
           
               <div class="form-floating pb-2">
-                <input type="email" class="form-control" id="floatingInput" placeholder="nome@example.com" required>
+                <input type="email" class="form-control" id="floatingInput" name='username' placeholder="nome@example.com" required>
                 <label for="floatingInput">E-mail</label>
               </div>
               <div class="form-floating">
-                <input type="password" class="form-control mb-2" id="floatingPassword" placeholder="Password" required>
+                <input  autocomplete="current-password" name="password" type="password" class="form-control mb-2" id="floatingPassword" placeholder="Password" required>
                 <label for="floatingPassword">Senha</label>
+              </div>
 
+              <div class="alert alert-danger d-none" ID="msg" role="alert">
+                Usuário ou senha inválidos!
               </div>
               <button class="w-100 btn btn-lg btn-primary mb-4" type="submit">Entrar</button>
           
-              <div class="checkbox ">
+              <div class=" checkbox ">
                 <p>Não tem uma conta? <a href="/cadastro">Cadastre-se!</a> </p>
               </div>
               
@@ -27,5 +30,25 @@
           </main>
 
     </section>
+
+    <script>
+      // Função para obter parâmetros da URL
+      function obterParametroDaURL(nome) {
+          const urlSearchParams = new URLSearchParams(window.location.search);
+          return urlSearchParams.get(nome);
+      }
+    
+      
+      //Verificar se houve sucesso!
+      const msg = obterParametroDaURL('msg');
+      if (msg === 'invalid') {
+          
+          msgErro = document.getElementById('msg');
+          msgErro.classList.remove("d-none");
+          msgErro.classList.add("d-block");
+      }
+    
+    
+    </script>
 
     <%- include('./components/footer') %>
