@@ -31,14 +31,24 @@ app.get('/', (req, res) => {
 
     }
     else {
-        res.send('Faça login! <a href="/login">login</a>')
+        // res.send('Faça login! <a href="/login">login</a>')
+        res.render('bemvindo', { username });
     }
 });
 
 app.get('/login', (req, res) => {
-    res.render('login', {
-        username: null
-    });
+    
+
+    username = req.session.username
+
+    if (username !== undefined) {
+        res.redirect('/');
+
+    }
+    else {
+        // res.send('Faça login! <a href="/login">login</a>')
+        res.render('login', { username });
+    }
 });
 
 
@@ -109,6 +119,7 @@ app.post('/login', async (req, res) => {
 
 
 
+
     const query = 'SELECT senha FROM usuarios WHERE email = ?';
 
     db.query(query, [username], async (err, results) => {
@@ -128,7 +139,7 @@ app.post('/login', async (req, res) => {
                         req.session.authenticated = true;
                         req.session.username = username;
                         console.log(username)
-                        res.render('index', { username });
+                        res.redirect('/');
                     } else {
                         // Senha inválida
                         res.redirect('/login?msg=invalid');
