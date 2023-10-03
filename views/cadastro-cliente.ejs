@@ -1,0 +1,92 @@
+<%- include('./components/header') %>
+
+
+  <!-- ABAS -->
+
+  <div class="content container pt-5">
+
+
+    <nav>
+      <div class="nav nav-tabs" id="nav-tab" role="tablist">
+        <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button"
+          role="tab" aria-controls="nav-home" aria-selected="true">Cadastrar</button>
+        <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button"
+          role="tab" aria-controls="nav-profile" aria-selected="false">Pesquisar</button>
+        <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button"
+          role="tab" aria-controls="nav-contact" aria-selected="false">Editar</button>
+      </div>
+    </nav>
+    <div class="tab-content" id="nav-tabContent">
+      <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+
+        <%- include('./components/formCadCliente') %>
+      </div>
+      <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+        <%- include('pesquisar-clientes') %>
+      </div>
+      
+      
+
+      <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">Editar</div>
+      
+    </div>
+
+  </div>
+
+
+
+
+
+  <!-- MODAL -->
+
+
+  <!-- Modal trigger button -->
+  <button type="button" id="launch" class="btn btn-primary btn-lg d-none" data-bs-toggle="modal"
+    data-bs-target="#modalId">
+    Launch
+  </button>
+
+  <!-- Modal Body -->
+  <!-- if you want to close by clicking outside the modal, delete the last endpoint:data-bs-backdrop and data-bs-keyboard -->
+  <div class="modal fade" id="modalId" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog"
+    aria-labelledby="modalTitleId" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalTitleId">Confirmação</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Usuário cadastrado com sucesso!
+        </div>
+        <div class="modal-footer">
+          <a href="/cadastro-cliente">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button></a>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+
+  <!-- ABRIR MODAL -->
+
+  <% if (parametro==='true' ) { %>
+    <!-- <div class="alert alert-success" role="alert">
+      Operação realizada com sucesso!
+    </div> -->
+    
+    <script type="module">
+          
+
+      const modal = new bootstrap.Modal(document.getElementById('modalId'));
+      modal.show();
+    </script>
+
+  
+    <% } %>
+
+      <!-- FOOTER -->
+
+      <%- include('./components/footer') %>

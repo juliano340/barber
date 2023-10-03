@@ -1,0 +1,33 @@
+
+
+
+
+<div class="tab-pane fade show active col-lg-6 col-12 mt-2 pb-5" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+    
+    
+    <form id="cadastroClienteForm" class="" action="/cadastro-cliente" method="post">
+        <div class="mb-3">
+            <label for="nome" class="form-label">Nome:</label>
+            <input type="text" class="form-control" id="nome" name="nome" required>
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">Email:</label>
+            <input type="email" class="form-control" id="email" name="email" required>
+        </div>
+        <div class="mb-3">
+            <label for="telefone" class="form-label">Telefone:</label>
+            <input type="tel" class="form-control" id="telefone" name="telefone">
+        </div>
+        <div class="mb-3">
+            <label for="sexo" class="form-label">Sexo:</label>
+            <select class="form-select" id="sexo" name="sexo">
+                <option value="masculino">Masculino</option>
+                <option value="feminino">Feminino</option>
+                <option value="outro">Outro</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-secondary">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Cadastrar</button>
+        
+    </form>
+</div>

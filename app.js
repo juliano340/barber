@@ -2,10 +2,14 @@ const express = require('express');
 const app = express();
 const port = 3000;
 
+
 const db = require('./db'); // Importa a conexão com o banco de dados
 
 const bcrypt = require('bcrypt');
 const session = require('express-session');
+
+const path = require('path');
+
 
 app.use(express.urlencoded({ extended: true }));
 
@@ -22,6 +26,7 @@ app.use(session({
 
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
+
 
 app.get('/', (req, res) => {
     username = req.session.username
@@ -186,4 +191,90 @@ app.get('/users', (req, res) => {
 
 app.listen(port, () => {
     console.log(`Servidor rodando em http://localhost:${port}`);
+});
+
+
+// Cadastro Clientes
+app.get('/cadastro-cliente', (req, res) => {
+    
+
+    const parametro = req.query.success
+
+
+    
+    console.log(parametro)
+
+
+    username = req.session.username
+
+    if (username) {
+            
+        res.render('cadastro-cliente', {parametro});
+
+    }
+    else {
+        res.redirect('/');
+    }
+        
+});
+
+//CADASTRAR CLIENTE
+
+// Rota POST para processar o formulário
+app.post('/cadastro-cliente', async (req, res) => {
+
+    try {
+
+        
+        const { nome, email, telefone, sexo } = req.body; // Supondo que os campos do formulário têm esses nomes
+
+        if(email === '') {
+            return;
+        }
+        // Insira os dados no banco de dados
+
+        db.execute('INSERT INTO Clientes (Nome, Email, Telefone, Sexo) VALUES (?, ?, ?, ?)', [nome, email, telefone, sexo]);
+
+        console.log('Registro inserido com sucesso!');
+        
+        // Redireciona para uma página de sucesso ou outra ação desejada
+        
+        res.redirect('/cadastro-cliente?success=true');
+
+    } catch (error) {
+        const mensagem = false;
+        console.error('Erro ao inserir o registro:', error);
+        // Lida com erros de inserção, redireciona para uma página de erro ou outra ação desejada
+        res.send('Erro ao inserir registro!');
+    }
+    
+    
+    
+});
+
+
+
+// Rota para a página de pesquisa de clientes
+app.get('/pesquisar-clientes', (req, res) => {
+    // Renderize a página de pesquisa de clientes sem resultados iniciais
+    res.render('pesquisar-clientes', { resultados: null });
+});
+
+// Lógica de pesquisa de clientes
+app.post('/pesquisar-clientes', (req, res) => {
+    const termo = req.body.termo.toLowerCase(); // Recupere o termo de pesquisa do formulário
+
+    // Consulte o banco de dados MySQL para buscar clientes
+    const sql = 'SELECT * FROM clientes WHERE email LIKE ? OR telefone LIKE ?';
+    const parametros = [`%${termo}%`, `%${termo}%`];
+
+    connection.query(sql, parametros, (err, resultados) => {
+        if (err) {
+            console.error('Erro ao consultar o banco de dados:', err);
+            return;
+        }
+
+        // Renderize a página de pesquisa de clientes com os resultados
+        res.render('pesquisar-clientes', { resultados });
+    });
 });
