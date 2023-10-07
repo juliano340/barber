@@ -1,91 +1,159 @@
 <br>
 
 
-    <form id="meuFormulario">
-        <div class="d-flex justify-content-start align-items-center"  >
-            
-            <input  class="form-control ms-1" type="text" id="termo" name="termo" required placeholder="Pesquise por e-mail ou telefone...">
-            <button class="btn btn-primary ms-2" type="submit">Pesquisar!</button>
-        </div>
-    </form>
+<form id="meuFormulario">
+    <div class="d-flex justify-content-start align-items-center">
 
-
-
-
-    <br>
-    <div id="resposta"></div>
-
-    <div class="container">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nome</th>
-                    <th>Email</th>
-                    <th>Telefone</th>
-                    <th>Sexo</th>
-                    <th>Data de Cadastro</th>
-                </tr>
-            </thead>
-            <tbody id="tabelaCorpo">
-                <!-- Os dados da resposta serão inseridos aqui dinamicamente -->
-            </tbody>
-        </table>
+        <input class="form-control ms-1" type="text" id="termo" name="termo" required
+            placeholder="Pesquise por e-mail ou telefone...">
+        <button class="btn btn-primary ms-2" type="submit">Pesquisar!</button>
     </div>
+</form>
 
-    <script>
-        const formulario = document.getElementById('meuFormulario');
-        const respostaDiv = document.getElementById('resposta');
+<button id="botaoAbrirEditar" class="btn btn-primary">Abrir Última Aba</button>
 
-        formulario.addEventListener('submit', async (e) => {
-            e.preventDefault();
+<!-- JavaScript para acionar a mudança de aba -->
 
-            const termo = document.getElementById('termo').value;
 
-            const response = await fetch('/enviar-email', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ termo: termo })
-            });
+<script>
 
-            if (response.ok) {
-                const data = await response.json();
-                limparTabela();
-                preencherTabela(data.data);
-                // respostaDiv.textContent = `Resposta da API: ${JSON.stringify(data)}`;
-            } else {
-                respostaDiv.textContent = 'Erro ao fazer a solicitação.';
-            }
+    function editar() {
+        const editar = document.getElementById('nav-contact-tab')
+        editar.click();
+    }
+
+    const botaoAbrirEditar = document.getElementById('botaoAbrirEditar');
+
+    botaoAbrirEditar.addEventListener('click', () => {
+        // Use o ID da última aba ("nav-contact") para acionar a mudança
+        editar()
+    });
+
+
+</script>
+
+
+
+
+<br>
+<div id="resposta"></div>
+
+<div class="container">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Email</th>
+                <th>Telefone</th>
+                <th>Sexo</th>
+                <th>Data de Cadastro</th>
+                <th>⚙</th>
+
+            </tr>
+        </thead>
+        <tbody id="tabelaCorpo">
+            <!-- Os dados da resposta serão inseridos aqui dinamicamente -->
+        </tbody>
+    </table>
+</div>
+
+<script>
+    const formulario = document.getElementById('meuFormulario');
+    const respostaDiv = document.getElementById('resposta');
+
+    formulario.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const termo = document.getElementById('termo').value;
+
+        const response = await fetch('/enviar-email', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ termo: termo })
         });
 
-       
-
-        function limparTabela() {
-            const tabelaCorpo = document.getElementById('tabelaCorpo');
-            while (tabelaCorpo.firstChild) {
-                tabelaCorpo.removeChild(tabelaCorpo.firstChild);
-            }
+        if (response.ok) {
+            const data = await response.json();
+            limparTabela();
+            preencherTabela(data.data);
+            // respostaDiv.textContent = `Resposta da API: ${JSON.stringify(data)}`;
+        } else {
+            respostaDiv.textContent = 'Erro ao fazer a solicitação.';
         }
+    });
 
 
-        function preencherTabela(dados) {
-            const tabelaCorpo = document.getElementById('tabelaCorpo');
 
-            for (const item of dados) {
-                const newRow = tabelaCorpo.insertRow();
-                newRow.innerHTML = `
+    function limparTabela() {
+        const tabelaCorpo = document.getElementById('tabelaCorpo');
+        while (tabelaCorpo.firstChild) {
+            tabelaCorpo.removeChild(tabelaCorpo.firstChild);
+        }
+    }
+
+
+    function goEdit() {
+    // Obtenha o ID do cliente a ser editado a partir do botão clicado
+    var clientId = event.target.getAttribute("data-id");
+
+    // Encontre a linha correspondente na tabela usando o ID
+    var table = document.getElementById("tabelaCorpo");
+    var rows = table.getElementsByTagName("tr");
+    var clientData;
+
+    for (var i = 0; i < rows.length; i++) {
+        var row = rows[i];
+        var idCell = row.getElementsByTagName("td")[0]; // Assume que o ID está na primeira célula da linha
+        if (idCell.textContent === clientId) {
+            // Encontrou a linha correspondente
+            var cells = row.getElementsByTagName("td");
+            clientData = {
+                id: cells[0].textContent,
+                name: cells[1].textContent,
+                email: cells[2].textContent,
+                telefone: cells[3].textContent,
+                sexo: cells[4].textContent,
+                // Adicione outros campos conforme necessário
+                
+            };
+            console.log(clientData);
+            break;
+        }
+    }
+
+    // Preencha o formulário de edição com os dados do cliente
+    document.getElementById("editFormId").value = clientData.id;
+    
+    document.getElementById("editFormName").value = clientData.name;
+    document.getElementById("editFormEmail").value = clientData.email;
+    document.getElementById("editFormTelefone").value = clientData.telefone;
+    document.getElementById("editFormSexo").value = clientData.sexo;
+
+    botaoAbrirEditar.click();
+    // Preencha outros campos do formulário conforme necessário
+}
+
+
+
+    function preencherTabela(dados) {
+        const tabelaCorpo = document.getElementById('tabelaCorpo');
+
+        for (const item of dados) {
+            const newRow = tabelaCorpo.insertRow();
+            newRow.innerHTML = `
                     <td>${item.ID}</td>
                     <td>${item.Nome}</td>
                     <td>${item.Email}</td>
                     <td>${item.Telefone}</td>
                     <td>${item.Sexo}</td>
                     <td>${item.DataCadastro}</td>
+                    <td><button class="btn btn-secondary" data-id="${item.ID}" onclick="goEdit()">Editar</button></td>
                 `;
-            }
         }
+    }
 
-        // Chame a função para buscar os dados da API e preencher a tabela
-        buscarDadosAPI();
-    </script>
+
+</script>
