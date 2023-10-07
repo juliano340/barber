@@ -24,11 +24,12 @@
       <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
         <%- include('pesquisar-clientes') %>
       </div>
-      
+      <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
+        
+        <%- include('editar-clientes') %>
+      </div>
       
 
-      <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">Editar</div>
-      
     </div>
 
   </div>
@@ -61,14 +62,14 @@
         </div>
         <div class="modal-footer">
           <a href="/cadastro-cliente">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button></a>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button></a>
 
         </div>
       </div>
     </div>
   </div>
 
-  
+
 
   <!-- ABRIR MODAL -->
 
@@ -76,15 +77,15 @@
     <!-- <div class="alert alert-success" role="alert">
       Operação realizada com sucesso!
     </div> -->
-    
+
     <script type="module">
-          
+
 
       const modal = new bootstrap.Modal(document.getElementById('modalId'));
       modal.show();
     </script>
 
-  
+
     <% } %>
 
       <!-- FOOTER -->

@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const port = 3000;
-
+const bodyParser = require('body-parser');
 
 const db = require('./db'); // Importa a conexão com o banco de dados
 
@@ -11,9 +11,13 @@ const session = require('express-session');
 const path = require('path');
 
 
-app.use(express.urlencoded({ extended: true }));
+// app.use(express.urlencoded({ extended: true }));
+// app.use(express.json());
 
 var userAuthenticated = false;
+
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 // Configurar a sessão
 app.use(session({
@@ -254,27 +258,57 @@ app.post('/cadastro-cliente', async (req, res) => {
 
 
 
-// Rota para a página de pesquisa de clientes
-app.get('/pesquisar-clientes', (req, res) => {
-    // Renderize a página de pesquisa de clientes sem resultados iniciais
-    res.render('pesquisar-clientes', { resultados: null });
-});
+// Rota para processar a pesquisa e enviar uma resposta JSON
+app.post('/pesquisar', async (req, res) => {
+    // Recupere o termo de pesquisa do formulário
+    const termo = req.body.email;
+    console.log('----')
+    console.log(termo)
 
-// Lógica de pesquisa de clientes
-app.post('/pesquisar-clientes', (req, res) => {
-    const termo = req.body.termo.toLowerCase(); // Recupere o termo de pesquisa do formulário
+    // Consulta SQL para buscar clientes com base no termo (email ou telefone)
+    const sql = `SELECT * FROM clientes WHERE email LIKE ? OR telefone LIKE ?`;
+    const searchTerm = `%${termo} %`; // Use `%` para corresponder a qualquer parte do email ou telefone
 
-    // Consulte o banco de dados MySQL para buscar clientes
-    const sql = 'SELECT * FROM clientes WHERE email LIKE ? OR telefone LIKE ?';
-    const parametros = [`%${termo}%`, `%${termo}%`];
-
-    connection.query(sql, parametros, (err, resultados) => {
+    // Execute a consulta SQL usando o mysql2
+    db.query(sql, [searchTerm, searchTerm], (err, resultados) => {
         if (err) {
             console.error('Erro ao consultar o banco de dados:', err);
-            return;
+            // Lide com o erro de acordo com suas necessidades
+            console.log('SUCESSO!')
+            res.status(500).json({ erro: 'Erro ao consultar o banco de dados' });
+        } else {
+            // Envie os resultados como resposta JSON
+            console.log(resultados)
+            res.json(resultados);
         }
-
-        // Renderize a página de pesquisa de clientes com os resultados
-        res.render('pesquisar-clientes', { resultados });
     });
 });
+
+
+
+app.post('/enviar-email', (req, res) => {
+    
+    const email = req.body.termo;
+  
+    // Aqui, você pode fazer o que quiser com o e-mail
+    console.log(`E-mail recebido: ${email}`);
+  
+    // Você pode responder ao cliente com uma mensagem de confirmação
+    const consulta = 'SELECT * FROM clientes WHERE email LIKE ? OR telefone LIKE ?';
+
+    const termoPesquisaLike = `%${email}%`;
+    console.log(termoPesquisaLike);
+    
+
+    db.query(consulta, [termoPesquisaLike, termoPesquisaLike], (err, results) => {
+        if (err) {
+          console.error('Erro na consulta ao banco de dados:', err);
+          res.status(500).json({ error: 'Erro ao consultar o banco de dados' });
+          return;
+        }
+    
+        // Retorna os resultados como JSON
+        res.json({ data: results });
+  });
+
+})
