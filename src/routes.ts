@@ -11,6 +11,7 @@ import { CheckSubscriptionController } from "./controllers/haircut/CheckSubscrip
 import { CountHairCutController } from "./controllers/haircut/CountHairCutsController";
 import { DetailHaircutController } from "./controllers/haircut/DetailHaircutController";
 import { NewScheduleController } from "./controllers/schedule/NewScheduleController";
+import { ListScheduleController } from "./controllers/schedule/ListScheduleController";
 
 const router = Router();
 
@@ -41,5 +42,6 @@ router.get(
   new DetailHaircutController().handle
 );
 router.post("/schedules", isAuthenticate, new NewScheduleController().handle);
+router.get("/schedules", isAuthenticate, new ListScheduleController().handle);
 
 export { router };
